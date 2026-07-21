@@ -6,9 +6,9 @@
   "scripts": {
     "build": "python3 scripts/build.py",
     "dev": "python3 -m http.server 8777 --directory web",
-    "deploy": "wrangler pages deploy web --project-name=itrainconnections"
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "wrangler": "^3.90.0"
+    "wrangler": "^4.0.0"
   }
 }
