@@ -1,0 +1,14 @@
+{
+  "name": "itrainconnections",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FlightConnections-style interactive map of India's train network",
+  "scripts": {
+    "build": "python3 scripts/build.py",
+    "dev": "python3 -m http.server 8777 --directory web",
+    "deploy": "wrangler pages deploy web --project-name=itrainconnections"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

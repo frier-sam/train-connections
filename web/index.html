@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>iTrainConnections — India rail network map</title>
+<meta name="description" content="FlightConnections-style interactive map of India's rail network: pick a city to see everywhere it reaches, or two cities for direct trains and one-change routes.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='8' width='28' height='16' rx='3' fill='%23F7C948'/%3E%3Crect x='2' y='20' width='28' height='4' rx='2' fill='%23141008'/%3E%3Ccircle cx='9' cy='16' r='2.6' fill='%23141008'/%3E%3Ccircle cx='23' cy='16' r='2.6' fill='%23141008'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="style.css?v=12">
+</head>
+<body>
+<div id="map" aria-label="Map of India's rail network"></div>
+
+<aside id="panel">
+  <header>
+    <h1><span class="mark" aria-hidden="true"></span>iTrainConnections</h1>
+    <p class="sub">Every train route in India, city by city</p>
+  </header>
+
+  <!-- From / To selectors -->
+  <div class="trip">
+    <div class="rail" aria-hidden="true"></div>
+    <div class="field" data-field="from">
+      <span class="dot from" aria-hidden="true"></span>
+      <input id="from" type="text" placeholder="From city or station…" autocomplete="off"
+             role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="From city">
+      <button class="x" data-clear="from" title="Clear from" aria-label="Clear from">×</button>
+      <ul class="results" role="listbox"></ul>
+    </div>
+    <div class="field" data-field="to">
+      <span class="dot to" aria-hidden="true"></span>
+      <input id="to" type="text" placeholder="To city (optional)…" autocomplete="off"
+             role="combobox" aria-expanded="false" aria-autocomplete="list" aria-label="To city">
+      <button class="x" data-clear="to" title="Clear to" aria-label="Clear to">×</button>
+      <ul class="results" role="listbox"></ul>
+    </div>
+    <button id="swap" title="Swap from and to" aria-label="Swap from and to">⇅</button>
+  </div>
+
+  <!-- Dynamic content: single-city info OR journey results -->
+  <div id="body"></div>
+
+  <div id="filters">
+    <label class="fhead" id="types-label">Train types</label>
+    <div id="types" role="group" aria-labelledby="types-label"></div>
+  </div>
+
+  <footer>
+    <span id="stats"></span>
+    <span class="src">Data: <a href="https://github.com/datameet/railways" target="_blank" rel="noopener noreferrer">DataMeet</a></span>
+  </footer>
+</aside>
+
+<div id="legend">
+  <span class="ltitle">Cities reachable direct</span>
+  <div class="lrow"><i class="r4"></i><span class="ln">1200+</span></div>
+  <div class="lrow"><i class="r3"></i><span class="ln">600+</span></div>
+  <div class="lrow"><i class="r2"></i><span class="ln">250+</span></div>
+  <div class="lrow"><i class="r1"></i><span class="ln">&lt;250</span></div>
+  <div class="lrow hub"><i></i>major hub city</div>
+</div>
+
+<div id="loading" role="status">
+  <div class="board-lg">iTrainConnections</div>
+  <div class="track"><span></span></div>
+  <p>Assembling India&rsquo;s rail network&hellip;</p>
+</div>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js?v=19"></script>
+</body>
+</html>
