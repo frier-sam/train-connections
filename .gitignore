@@ -1,0 +1,5 @@
+# large source dumps are re-downloadable via scripts/fetch_data.py
+data/schedules.json
+data/raw/
+node_modules/
+.DS_Store
