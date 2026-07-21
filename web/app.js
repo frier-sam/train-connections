@@ -63,7 +63,7 @@ function gc(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-const DATA_V = '11';   // bump with the ?v= on app.js whenever data is rebuilt
+const DATA_V = '12';   // bump with the ?v= on app.js whenever data is rebuilt
 async function boot() {
   const [sj, tj, cj] = await Promise.all([
     fetch(`data/stations.json?v=${DATA_V}`).then(r => r.json()),

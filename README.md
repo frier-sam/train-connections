@@ -15,7 +15,7 @@ names (Mumbai, Delhi, Kolkata, Bengaluru, …). See `AUDIT.md` for the full
 audit and what was fixed.
 
 ## Features
-- **8,189 stations clustered into 3,371 cities · 5,199 trains** on one dark map.
+- **8,818 stations clustered into 3,332 cities · 5,206 trains** on one dark map.
   A city groups nearby stations (Delhi = New Delhi + Nizamuddin + Anand Vihar +
   Sarai Rohilla + …), so the graph is city-to-city and a transfer may arrive at
   one station and leave from another in the same city.
@@ -32,11 +32,27 @@ audit and what was fixed.
 - **Filter by train type** (Express, Superfast, Duronto, Rajdhani, Passenger…).
 
 ## Data
-Source: [DataMeet/railways](https://github.com/datameet/railways) (open).
-`trains.json` stores each train as a GeoJSON **LineString following the real
-track**, and every vertex sits exactly on a station coordinate — so the full
-stop sequence and the connection graph are recoverable from one file.
-`schedules.json` (82 MB timings) is not needed for the route map.
+`scripts/fetch_data.py` assembles the raw inputs (cached in `data/raw/`,
+`--refresh` to re-download) and emits `data/stations.json` + `data/trains.json`
+in DataMeet-compatible GeoJSON:
+
+- **Station coordinates: Wikidata** (SPARQL, property P5696 = IR station code,
+  CC0, live) — covers ~97% of stations; [DataMeet/railways](https://github.com/datameet/railways)
+  fills the gap and wins when the two disagree by >50 km (a dozen Wikidata
+  code collisions).
+- **Schedules/stop sequences: the ~2015 CRIS open-data release** (via the
+  DataMeet lineage). ⚠ Every free bulk schedule dump traces back to this one
+  snapshot — no Vande Bharat etc. Current schedules exist only behind keyed
+  per-request APIs; the cleanest upgrade is a paid
+  [RailRadar](https://railradar.in) key (free tier is 50 req/day — too slow to
+  backfill ~5,200 trains), which would slot into `fetch_data.py`'s
+  schedule-fetch step without changing anything downstream.
+
+`trains.json` stores each train as a GeoJSON **LineString whose every vertex
+sits exactly on a station coordinate** — so the full stop sequence and the
+connection graph are recoverable from one file. `fetch_data.py` validates the
+geometry (zero consecutive-stop gaps >150 km) and the app additionally refuses
+to draw implausible chords.
 
 `build.py` also clusters stations into cities (greedy, ~10 km around the most-
 connected anchor; there's no clean city field in the data, so proximity is the
@@ -46,9 +62,8 @@ drawn on per-station geometry.
 
 ## Develop
 ```bash
-# 1. fetch raw data (once)
-curl -sL https://raw.githubusercontent.com/datameet/railways/master/stations.json -o data/stations.json
-curl -sL https://raw.githubusercontent.com/datameet/railways/master/trains.json   -o data/trains.json
+# 1. fetch + assemble raw data (Wikidata coords + schedule dump)
+python3 scripts/fetch_data.py          # add --refresh to force re-download
 
 # 2. build compact frontend data -> web/data/
 npm run build          # == python3 scripts/build.py
@@ -56,6 +71,8 @@ npm run build          # == python3 scripts/build.py
 # 3. serve locally
 npm run dev            # http://localhost:8777
 ```
+After rebuilding data, bump `DATA_V` in `web/app.js` and the `?v=` on
+`app.js` in `index.html`.
 
 ## Deploy (Cloudflare Pages)
 The app is fully static — `web/` is the deploy directory. Everything it needs

@@ -295,12 +295,17 @@ def main():
     spike_stops_dropped = 0
     for number, stops in by_train.items():
         stops = sorted(stops, key=stop_sort_key)
-        # ordered station-code sequence, consecutive dups collapsed
+        # Ordered station-code sequence. Dedupe by code (keep first
+        # occurrence): a few trains (e.g. 09765/09766) have their entire
+        # stop list duplicated in schedules.json, which would otherwise wrap
+        # the route back to its origin.
         seq = []
+        seen = set()
         for s in stops:
             c = (s.get("station_code") or "").strip().upper()
-            if c in coord and (not seq or seq[-1] != c):
+            if c in coord and c not in seen:
                 seq.append(c)
+                seen.add(c)
         # remove stops whose coordinate is a geographic outlier vs neighbours
         seq, n_spikes = drop_spikes(seq, coord)
         spike_stops_dropped += n_spikes

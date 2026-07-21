@@ -23,8 +23,8 @@ CITY_RADIUS_KM = 10.0    # stations within this of an anchor join its city
 # A major hub city is a real interchange: many trains AND many lines radiating
 # out (distinct neighbouring cities), so mid-corridor stops that every train
 # passes through don't qualify.
-CITY_HUB_MIN_TRAINS = 150
-CITY_HUB_MIN_LINES = 5
+CITY_HUB_MIN_TRAINS = 120
+CITY_HUB_MIN_LINES = 4
 
 RAW_STATIONS = "data/stations.json"
 RAW_TRAINS = "data/trains.json"
